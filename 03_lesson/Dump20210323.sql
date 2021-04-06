@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.23, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: vk
+-- Host: localhost    Database: vk
 -- ------------------------------------------------------
 -- Server version	8.0.23
 
@@ -70,6 +70,40 @@ CREATE TABLE `friend_request` (
 LOCK TABLES `friend_request` WRITE;
 /*!40000 ALTER TABLE `friend_request` DISABLE KEYS */;
 /*!40000 ALTER TABLE `friend_request` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `likes`
+--
+
+DROP TABLE IF EXISTS `likes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `likes` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int unsigned NOT NULL,
+  `media_id` int unsigned DEFAULT NULL,
+  `post_id` int unsigned DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `media_UNIQUE` (`user_id`,`media_id`) /*!80000 INVISIBLE */,
+  UNIQUE KEY `post_UNIQUE` (`user_id`,`post_id`),
+  KEY `fk_likes_user1_idx` (`user_id`),
+  KEY `fk_likes_media1_idx` (`media_id`),
+  KEY `fk_likes_post1_idx` (`post_id`),
+  CONSTRAINT `fk_likes_media1` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`),
+  CONSTRAINT `fk_likes_post1` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`),
+  CONSTRAINT `fk_likes_user1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `likes`
+--
+
+LOCK TABLES `likes` WRITE;
+/*!40000 ALTER TABLE `likes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -213,6 +247,7 @@ CREATE TABLE `profile` (
   `birthday` date NOT NULL,
   `address` varchar(245) DEFAULT NULL,
   `photo_id` int unsigned DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   KEY `fk_profile_media1_idx` (`photo_id`),
   CONSTRAINT `fk_profile_media1` FOREIGN KEY (`photo_id`) REFERENCES `media` (`id`),
@@ -246,7 +281,7 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `phone_UNIQUE` (`phone`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,6 +290,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES (1,'e1@mail.ru',79009009091,'8cb2237d0679ca88db6464eac60da96345513964','2021-03-22 14:21:46',NULL),(2,'e2@mail.ru',79009009092,'24edb21b15d95aca150a4941e7725708f9b90ce1','2021-03-22 14:54:06',NULL),(3,'e3@mail.ru',79009009093,'a9572530f377a1c945cf50e4db286a4a7ca3b1bf','2021-03-22 14:58:02',NULL),(7,'e6@mail.ru',79009009096,'d731435043fca7c3003c45289e6957c4193ff497','2021-03-22 14:59:03',NULL),(8,'e4@mail.ru',79009009094,'c98afd8754d99fcc71e1541a208bf75c300d44af','2021-03-22 14:59:03',NULL),(10,'e7@mail.ru',79009009097,'370ae9f23c0dc659038296de425af7cbd3898556','2020-01-01 00:00:00',NULL),(11,'e8@mail.ru',79009009098,'7ca610510bf852e3519c3db31d4eb1b75d99ae6e','2021-03-22 15:07:54',NULL),(12,'e9@mail.ru',79009009099,'a64da1ad7b2639b14de95419f102ad4e6cb7ae79','2021-03-22 15:07:54',NULL),(13,'e11@mail.ru',79009009011,'8add8abcb95be9999a54d4dc602874132e05e7ea','2021-03-22 15:11:37',NULL),(15,'e15@mail.ru',79009009015,'SHA1(34567)','2021-03-23 12:08:13',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -294,4 +330,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-03-10 22:38:17
+-- Dump completed on 2021-03-23 19:52:12
