@@ -193,6 +193,22 @@ INSERT INTO `program_goal` VALUES (1,1,'2021-04-29 14:39:41','Внедрить �
 UNLOCK TABLES;
 
 --
+-- Temporary view structure for view `programm budjets`
+--
+
+DROP TABLE IF EXISTS `programm budjets`;
+/*!50001 DROP VIEW IF EXISTS `programm budjets`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `programm budjets` AS SELECT 
+ 1 AS `Программа`,
+ 1 AS `плановые затраты программы`,
+ 1 AS `Проект`,
+ 1 AS `плановые затраты`,
+ 1 AS `фактические затраты`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Table structure for table `programm_budget`
 --
 
@@ -387,7 +403,7 @@ CREATE TABLE `user` (
   `fired` int DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_id_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='Триггер, обновляющий задачи пользователя при увольнении. Устанавливает исполнителем руководителя соответствующего проекта.';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -399,6 +415,26 @@ LOCK TABLES `user` WRITE;
 INSERT INTO `user` VALUES (1,'Наумов Геннадий Валерианович','ivan@job.ru','Директор','Администрация',NULL),(2,'Демьян Арсенович Гусев','poljakovljubosmisl@rambler.ru','Заместитель директора','Администрация',NULL),(3,'Лазарь Денисович Фадеев','osipgurev@job.ru','Заместитель директора','Администрация',NULL),(4,'Мартынов Терентий Фадеевич','novikovafanasi@fsk.net','Заместитель директора','Администрация',NULL),(5,'Суханова Регина Кузьминична','vladimir11@ip.edu','Заместитель директора','Администрация',NULL),(6,'Блохина Агафья Владимировна','muhinaangelina@ooo.ru','Заместитель директора','Администрация',NULL),(7,'Некрасов Кондрат Дорофеевич','lukinmark@npo.edu','Промышленный альпинист','Отдел кадров',NULL),(8,'Чернов Олимпий Жанович','maksim_1976@yandex.ru','Диктор','Отдел кадров',NULL),(9,'Модест Еремеевич Беляев','vissarionmuravev@ip.net','Бармен','Отдел кадров',NULL),(10,'Осипов Никифор Григорьевич','hristoforfilippov@oao.org','Программист','Отдел кадров',NULL),(11,'Кононова Евдокия Кирилловна','valentina2018@rambler.ru','Проктолог','Отдел кадров',NULL),(12,'Егор Харлампьевич Марков','hristoforgorbunov@rambler.ru','Дерматолог','Отдел кадров',NULL),(13,'Лукина Таисия Антоновна','anikita_37@yahoo.com','Переплётчик','Отдел кадров',NULL),(14,'Вера Оскаровна Игнатьева','andreevlev@zao.info','Руководитель проектов','Проектный офис',NULL),(15,'Давыдова Зинаида Ивановна','ipati37@mail.ru','Руководитель проектов','Проектный офис',NULL),(16,'Александр Ерофеевич Макаров','isa2014@rambler.ru','Руководитель проектов','Проектный офис',NULL),(17,'Аверкий Дмитриевич Жуков','panovaagata@ao.org','Руководитель проектов','Проектный офис',NULL),(18,'Галина Ильинична Сысоева','gedeon08@hotmail.com ','Руководитель проектов','Проектный офис',NULL),(19,'Екатерина Валентиновна Виноградова','borislapin@mail.ru','Руководитель проектов','Проектный офис',NULL),(20,'Дорофеева Ираида Тарасовна','avde2007@rambler.ru','Руководитель проектов','Проектный офис',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `user_AFTER_UPDATE` AFTER UPDATE ON `user` FOR EACH ROW BEGIN
+if user.fired = 1 then
+	update mydb.task set user_user_id = 
+	(select project.user_user_id from mydb.project where project.project_id = task.project_project_id);
+    end if;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Dumping events for database 'mydb'
@@ -407,6 +443,46 @@ UNLOCK TABLES;
 --
 -- Dumping routines for database 'mydb'
 --
+/*!50003 DROP PROCEDURE IF EXISTS `help` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `help`()
+BEGIN
+select "База данных проектов и программ проектов";
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `user_task_count` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `user_task_count`(id int)
+BEGIN
+DECLARE userid int;
+select count(*) into userid from mydb.task where user_user_id = id and task_completed <=> null;
+select userid;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Final view structure for view `contracts`
@@ -445,6 +521,24 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `programm budjets`
+--
+
+/*!50001 DROP VIEW IF EXISTS `programm budjets`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `programm budjets` AS select `program`.`programm_name` AS `Программа`,(select sum(`programm_budget`.`cost_plan`)) AS `плановые затраты программы`,`project`.`description` AS `Проект`,(select sum(`project_budget`.`cost_plan`)) AS `плановые затраты`,(select sum(`project_budget`.`cost_actual`)) AS `фактические затраты` from (((`program` left join `project` on((`project`.`program_programm_id` = `program`.`programm_id`))) left join `programm_budget` on((`programm_budget`.`program_programm_id` = `program`.`programm_id`))) left join `project_budget` on((`project`.`project_id` = `project_budget`.`project_project_id`))) group by `project`.`description` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `projects of programms`
 --
 
@@ -471,4 +565,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-01 17:07:15
+-- Dump completed on 2021-05-02 17:42:50

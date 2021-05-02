@@ -21,26 +21,16 @@
 
 скрипты характерных выборок (включающие группировки, JOIN'ы, вложенные таблицы);
 1. Вложенные селекты: Список просроченных задач проекта и программы
-2. Программы с отклонением по бюджету (в работе!)
+2. Плановые бюджеты программ и план/факт проектов программ
 
 представления (минимум 2);
 1. Join Программы + Проекты + Руководители программ
 2. Join Проекты + Контракты + Контрагенты
 
 хранимые процедуры / триггеры;
-- проверка соответствия даты окончания проектов программы дате окончания программы (в работе!)
-- замена для задачи уволенных исполнителей задачи на руководителя проекта (в работе!)
+- подсчет количества незакрытых (`task_completed` is not null ) задач у пользователя
+
+- замена для задачи уволенных исполнителей задачи на руководителя проекта 
+(при простановке у пользовалеля признака "уволен", триггер заменяет в задачах его на руководителя его проекта)
 
 
-Образцы запросов:
-
--- Просроченные задачи по программам
-SELECT 
-(select program.programm_name from program where program.programm_id = (select project.program_programm_id from project where project.project_id = task.project_project_id)) as "Программа",
-(select project.description from project where project.project_id = task.project_project_id) as "Проект",
-task.description as "Название задачи",
-(select user.name from user where user.user_id = task.user_user_id) as 'Исполнитель',
-(select date(now()) - date(task.task_end_plan)) as "Дней просрочено"
-FROM mydb.task
-where
-task.task_end_plan < now() and task.task_completed <=> null;
